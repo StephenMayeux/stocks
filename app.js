@@ -6,8 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
+app.io = require('socket.io')();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -54,5 +53,18 @@ app.use(function(err, req, res, next) {
   });
 });
 
+app.io.on('connection', function(socket){
+
+  console.log('a user connected');
+
+    socket.on('send quote', function(data) {
+      app.io.sockets.emit('new quote', {num: data, farts: ' farts have been farted!'});
+    });
+
+    socket.on('disconnect', function(data) {
+      console.log('a user has disconnected');
+    });
+
+});
 
 module.exports = app;

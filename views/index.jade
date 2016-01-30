@@ -1,5 +1,10 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to the Stock Market
+  .container
+    h1 Stephen's Stock Market Tracker
+    p.lead Search for a stock and see historical data!
+    button(type="button", class="btn btn-primary", id="get-quote", style="margin-bottom: 10px;") Click for Quotes!
+    .row
+      .col.xs-3
+        ul.list-group.list-inline#quotes
