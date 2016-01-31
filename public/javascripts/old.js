@@ -31,12 +31,17 @@ $(document).ready(function() {
 
 
 
-  $('#get-quote').on('click', function() {
+  $('#get-quote').on('click', function(e) {
+    e.preventDefault();
     symbol = $('#search').val();
     var response = $.get(url + symbol + endUrl, function(data) {
     })
       .done(function(data) {
         console.log(data.dataset.data);
+      })
+      .fail(function(err) {
+        alert('That symbol does not exist.');
+        console.log('shit failed for this reason: ' + err);
       });
   });
 

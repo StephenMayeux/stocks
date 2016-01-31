@@ -1,13 +1,14 @@
 doctype html
-html
+html(ng-app="app")
   head
     title Stephen's Stock Market Tracker
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap.css')
-  body
+  body(ng-controller="MainController")
     block content
     script(src='/javascripts/jquery-2.2.0.js')
     script(src='/javascripts/bootstrap.js')
+    script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js")
     script(src='/socket.io/socket.io.js')
-    script(src='/javascripts/app.js', type="application/javascript")
+    script(src='/javascripts/core.js', type="application/javascript")
     
