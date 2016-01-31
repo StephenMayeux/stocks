@@ -9,3 +9,7 @@ var Stock = module.exports = mongoose.model('Stock', stockSchema);
 module.exports.saveStock = function(newStock, callback) {
   newStock.save(callback);
 };
+
+module.exports.findStocks = function(callback) {
+  Stock.find({}, {}, callback);
+};

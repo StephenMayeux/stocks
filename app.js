@@ -9,6 +9,7 @@ app.io = require('socket.io')();
 var routes = require('./routes/index');
 var api = require('./routes/api');
 var mongoose = require('mongoose');
+var Stock = require('./models/stock');
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/stocks');
 
@@ -61,6 +62,11 @@ app.use(function(err, req, res, next) {
 app.io.on('connection', function(socket){
 
   console.log('a user connected');
+
+  Stock.findStocks(function(err, docs) {
+    if (err) throw err;
+    app.io.sockets.emit('show stocks', {data: docs});
+  });
 
     socket.on('send quote', function(data) {
       app.io.sockets.emit('new quote', {num: data, farts: ' farts have been farted!'});

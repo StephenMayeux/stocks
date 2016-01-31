@@ -26,6 +26,10 @@ app.factory('socket', function ($rootScope) {
 
 function MainController($scope, $http, socket) {
 
+  socket.on('show stocks', function(data) {
+    $scope.fetched = data.data;
+  });
+
   $scope.searchStocks = function(stock) {
     $http.get('/api/' + stock)
       .success(function(data) {
