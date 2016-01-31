@@ -25,7 +25,11 @@ router.get('/:stock', function(req, res, next) {
     console.log('This is the response variable: ' + typeof response);
     var body = JSON.parse(response);
     console.log('This is the body variable: ' + typeof body);
-    res.send(body.dataset.data);
+    if (body.quandl_error) {
+      res.send('This does not exist');
+    } else {
+      res.send(body.dataset.data);
+    }
   });
 
 });

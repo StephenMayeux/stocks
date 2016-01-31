@@ -31,6 +31,9 @@ function MainController($scope, $http, socket) {
       .success(function(data) {
         console.log(data);
         $scope.stocks = data;
+      })
+      .error(function(err) {
+        console.log('Shit fucked up because of: ' + err);
       });
   };
 
