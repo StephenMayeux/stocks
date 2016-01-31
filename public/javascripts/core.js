@@ -33,11 +33,11 @@ function MainController($scope, $http, socket) {
   $scope.searchStocks = function(stock) {
     $http.get('/api/' + stock)
       .success(function(data) {
-        console.log(data);
-        $scope.stocks = data;
+        console.log('Successful request: ' + data.length);
+        socket.emit('updated quotes');
       })
       .error(function(err) {
-        console.log('Shit fucked up because of: ' + err);
+        console.log('There was an error because of: ' + err);
       });
   };
 

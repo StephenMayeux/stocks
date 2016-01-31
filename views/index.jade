@@ -4,12 +4,12 @@ block content
   .container
     h1 Stephen's Stock Market Tracker
     p.lead Search for a stock and see historical data!
-    div(ng-repeat="fetch in fetched")
-      p {{fetch.name}}
     div.input-group
       input.form-control(type="text", id="search", placeholder="Search for stock symbols", ng-model="formData.text")
       span.input-group-btn
         button.btn.btn-primary(type="button", id="get-quote", style="margin-bottom: 10px;", ng-click="searchStocks(formData.text)") Click for Quotes!
+    div(ng-repeat="fetch in fetched")
+      p {{fetch.name}}
     .row
       .col.xs-3
         ul.list-group.list-inline#quotes

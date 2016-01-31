@@ -24,9 +24,7 @@ router.get('/:stock', function(req, res, next) {
   }
 
   getStocks(function(response) {
-    console.log('This is the response variable: ' + typeof response);
     var body = JSON.parse(response);
-    console.log('This is the body variable: ' + typeof body);
     if (body.quandl_error) {
       res.send('This does not exist');
     } else {
@@ -36,9 +34,14 @@ router.get('/:stock', function(req, res, next) {
       Stock.saveStock(newStock, function(err, doc) {
         if (err) throw err;
       });
-      res.send(body.dataset.data);
+      Stock.findStocks(function(err, docs) {
+        if (err) throw err;
+        res.send(docs);
+      });
     }
   });
+
+
 
 });
 

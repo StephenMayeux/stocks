@@ -68,13 +68,16 @@ app.io.on('connection', function(socket){
     app.io.sockets.emit('show stocks', {data: docs});
   });
 
-    socket.on('send quote', function(data) {
-      app.io.sockets.emit('new quote', {num: data, farts: ' farts have been farted!'});
+  socket.on('updated quotes', function(data) {
+    Stock.findStocks(function(err, docs) {
+      if (err) throw err;
+      app.io.sockets.emit('show stocks', {data: docs});
     });
+  });
 
-    socket.on('disconnect', function(data) {
-      console.log('a user has disconnected');
-    });
+  socket.on('disconnect', function(data) {
+    console.log('a user has disconnected');
+  });
 
 });
 
