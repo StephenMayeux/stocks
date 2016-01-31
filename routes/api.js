@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var Quandl = require('quandl');
+var Stock = require('../models/stock');
+var mongoose = require('mongoose');
 
 var quandl = new Quandl({
   auth_token: 'Wygwb7Xp33xj2NSe9-sL',
@@ -28,6 +30,12 @@ router.get('/:stock', function(req, res, next) {
     if (body.quandl_error) {
       res.send('This does not exist');
     } else {
+      var newStock = new Stock({
+        name: body.dataset.dataset_code
+      });
+      Stock.saveStock(newStock, function(err, doc) {
+        if (err) throw err;
+      });
       res.send(body.dataset.data);
     }
   });
