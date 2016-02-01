@@ -63,13 +63,13 @@ app.io.on('connection', function(socket){
 
   console.log('a user connected');
 
-  Stock.findStocks(function(err, docs) {
+  Stock.findStocks({}, {}, function(err, docs) {
     if (err) throw err;
     app.io.sockets.emit('show stocks', {data: docs});
   });
 
   socket.on('updated quotes', function(data) {
-    Stock.findStocks(function(err, docs) {
+    Stock.findStocks({}, {}, function(err, docs) {
       if (err) throw err;
       app.io.sockets.emit('show stocks', {data: docs});
     });

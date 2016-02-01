@@ -9,7 +9,5 @@ block content
       span.input-group-btn
         button.btn.btn-primary(type="button", id="get-quote", style="margin-bottom: 10px;", ng-click="searchStocks(formData.text)") Click for Quotes!
     div(ng-repeat="fetch in fetched")
-      p {{fetch.name}}
-    .row
-      .col.xs-3
-        ul.list-group.list-inline#quotes
+      p {{fetch.label}}
+    canvas#myChart(width="400", height="400")

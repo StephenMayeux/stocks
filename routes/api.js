@@ -3,21 +3,27 @@ var router = express.Router();
 var Quandl = require('quandl');
 var Stock = require('../models/stock');
 var mongoose = require('mongoose');
+var moment = require('moment');
 
 var quandl = new Quandl({
   auth_token: 'Wygwb7Xp33xj2NSe9-sL',
-  api_version: 3,
-  order: 'asc',
-  exclude_column_names: true,
-  start_date: '2015-01-30',
-  end_date: '2016-01-29',
-  column_index: 4
+  api_version: 3
 });
 
 router.get('/:stock', function(req, res, next) {
 
   function getStocks(callback) {
-    quandl.dataset({source: 'WIKI', table: req.params.stock}, function(err, response) {
+    quandl.dataset({
+      source: 'WIKI',
+      table: req.params.stock
+      },
+      {
+        order: 'asc',
+        exclude_column_names: true,
+        start_date: moment().subtract(3, 'months').format('YYYY-MM-DD'),
+        end_date: moment().format('YYYY-MM-DD'),
+        column_index: 4
+      }, function(err, response) {
       if (err) {throw err;}
       callback(response);
     });
@@ -25,11 +31,26 @@ router.get('/:stock', function(req, res, next) {
 
   getStocks(function(response) {
     var body = JSON.parse(response);
+    var rawData = body.dataset.data;
+    var dates = [];
+    var prices = [];
+    rawData.forEach(function(item) {
+      dates.push(item[0]);
+      prices.push(item[1]);
+    });
     if (body.quandl_error) {
-      res.send('This does not exist');
+      res.send('This stock symbol does not exist in the Quandl Database.');
     } else {
       var newStock = new Stock({
-        name: body.dataset.dataset_code
+        label: body.dataset.dataset_code,
+        fillColor: 'rgba(220,220,220,0.2)',
+        strokeColor: 'rgba(220,220,220,1)',
+        pointColor: 'rgba(220,220,220,1)',
+        pointStrokeColor: '#fff',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        dates: dates,
+        data: prices
       });
       Stock.saveStock(newStock, function(err, doc) {
         if (err) throw err;
@@ -40,9 +61,6 @@ router.get('/:stock', function(req, res, next) {
       });
     }
   });
-
-
-
 });
 
 module.exports = router;

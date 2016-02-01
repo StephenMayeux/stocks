@@ -33,7 +33,7 @@ function MainController($scope, $http, socket) {
   $scope.searchStocks = function(stock) {
     $http.get('/api/' + stock)
       .success(function(data) {
-        console.log('Successful request: ' + data.length);
+        $scope.fetched = data.data;
         socket.emit('updated quotes');
       })
       .error(function(err) {
