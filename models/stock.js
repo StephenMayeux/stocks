@@ -1,15 +1,9 @@
 var mongoose = require('mongoose');
 
 var stockSchema = mongoose.Schema({
-  label: String,
-  fillColor: String,
-  strokeColor: String,
-  pointColor: String,
-  pointStrokeColor: String,
-  pointHighlightFill: String,
-  pointHighlightStroke: String,
+  name: String,
   dates: Array,
-  data: Array
+  prices: Array
 });
 
 var Stock = module.exports = mongoose.model('Stock', stockSchema);

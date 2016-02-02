@@ -42,15 +42,9 @@ router.get('/:stock', function(req, res, next) {
       res.send('This stock symbol does not exist in the Quandl Database.');
     } else {
       var newStock = new Stock({
-        label: body.dataset.dataset_code,
-        fillColor: 'rgba(220,220,220,0.2)',
-        strokeColor: 'rgba(220,220,220,1)',
-        pointColor: 'rgba(220,220,220,1)',
-        pointStrokeColor: '#fff',
-        pointHighlightFill: '#fff',
-        pointHighlightStroke: 'rgba(220,220,220,1)',
+        name: body.dataset.dataset_code,
         dates: dates,
-        data: prices
+        prices: prices
       });
       Stock.saveStock(newStock, function(err, doc) {
         if (err) throw err;
