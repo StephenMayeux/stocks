@@ -1,6 +1,7 @@
+// Declare app and inject ChartsJS
 var app = angular.module('app', ['chartjs-directive']);
 
-// Integrates socket.io with AngularJS
+// Encapsulate Socket.io in Angular's Dependency Injection System
 app.factory('socket', function ($rootScope) {
   var socket = io.connect();
   return {
@@ -25,47 +26,20 @@ app.factory('socket', function ($rootScope) {
   };
 });
 
+//Main Controller for our app
 function MainController($scope, $http, socket) {
 
+  // Create empty object to store ChartsJS data
   $scope.chartData = {};
 
-  $scope.updateData = function(data) {
-    var chart = document.getElementById("myCoolChart").getAttribute("type");
-    $scope.generateData(data);
-  };
+  socket.on('show charts', function(data) {
+    $scope.createChart(data.data);
+  });
 
-  $scope.generateData = function(data){
-    var sevenRandNumbers = function(){
-      var numberArray = [];
-      for (var i=0;i<7;i++){
-        numberArray.push(Math.floor((Math.random()*100)+1));
-      }
-      return numberArray;
-    };
-    /*var data = {
-      labels : ["January","February","March","April","May","June","July"],
-      datasets : [
-        {
-          fillColor : "rgba(220,220,220,0.5)",
-          strokeColor : "rgba(220,220,220,1)",
-          pointColor : "rgba(220,220,220,1)",
-          pointStrokeColor : "#fff",
-          data : sevenRandNumbers()
-        },
-        {
-          fillColor : "rgba(151,187,205,0.5)",
-          strokeColor : "rgba(151,187,205,1)",
-          pointColor : "rgba(151,187,205,1)",
-          pointStrokeColor : "#fff",
-          data : sevenRandNumbers()
-        }
-      ]
-    };*/
+  $scope.createChart = function(data){
     console.log($scope.chartData);
-    $scope.myChart = {"data": data, "options": {} };
+    $scope.myChart = {"data": data, "options": {reponsive: true, scaleShowLabels: false, showTooltips: false, pointDot: false} };
   };
-
-  $scope.updateData();
 
   socket.on('show stocks', function(data) {
     $scope.fetched = data.data;
@@ -77,7 +51,8 @@ function MainController($scope, $http, socket) {
         //$scope.fetched = data.data;
         $scope.chartData = data;
         socket.emit('updated quotes');
-        $scope.updateData($scope.chartData);
+        socket.emit('updated charts', {data: $scope.chartData});
+        $scope.createChart($scope.chartData);
       })
       .error(function(err) {
         console.log('There was an error because of: ' + err);

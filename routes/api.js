@@ -10,7 +10,7 @@ var quandl = new Quandl({
   api_version: 3
 });
 
-router.get('/:stock', function(req, res, next) {
+router.get('/:stock', function(req, res) {
 
   function getStocks(callback) {
     quandl.dataset({
@@ -57,6 +57,7 @@ router.get('/:stock', function(req, res, next) {
         docs.forEach(function(item) {
           chartData.datasets.push(
             {
+              label: item.name,
               fillColor: 'rgba(151,187,205,0.5)',
               strokeColor: 'rgba(151,187,205,1)',
               pointColor: 'rgba(151,187,205,1)',
@@ -65,7 +66,6 @@ router.get('/:stock', function(req, res, next) {
             }
           );
         });
-        console.log(chartData);
         res.send(chartData);
       });
     }

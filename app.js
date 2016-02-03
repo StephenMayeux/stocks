@@ -75,6 +75,11 @@ app.io.on('connection', function(socket){
     });
   });
 
+  socket.on('updated charts', function(data) {
+    console.log(data);
+    app.io.sockets.emit('show charts', {data: data.data});
+  });
+
   socket.on('disconnect', function(data) {
     console.log('a user has disconnected');
   });
