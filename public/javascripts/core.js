@@ -27,12 +27,14 @@ app.factory('socket', function ($rootScope) {
 
 function MainController($scope, $http, socket) {
 
-  $scope.updateData = function() {
+  $scope.chartData = {};
+
+  $scope.updateData = function(data) {
     var chart = document.getElementById("myCoolChart").getAttribute("type");
-    $scope.generateData();
+    $scope.generateData(data);
   };
 
-  $scope.generateData = function(){
+  $scope.generateData = function(data){
     var sevenRandNumbers = function(){
       var numberArray = [];
       for (var i=0;i<7;i++){
@@ -40,7 +42,7 @@ function MainController($scope, $http, socket) {
       }
       return numberArray;
     };
-    var data = {
+    /*var data = {
       labels : ["January","February","March","April","May","June","July"],
       datasets : [
         {
@@ -58,7 +60,8 @@ function MainController($scope, $http, socket) {
           data : sevenRandNumbers()
         }
       ]
-    };
+    };*/
+    console.log($scope.chartData);
     $scope.myChart = {"data": data, "options": {} };
   };
 
@@ -71,8 +74,10 @@ function MainController($scope, $http, socket) {
   $scope.searchStocks = function(stock) {
     $http.get('/api/' + stock)
       .success(function(data) {
-        $scope.fetched = data.data;
+        //$scope.fetched = data.data;
+        $scope.chartData = data;
         socket.emit('updated quotes');
+        $scope.updateData($scope.chartData);
       })
       .error(function(err) {
         console.log('There was an error because of: ' + err);

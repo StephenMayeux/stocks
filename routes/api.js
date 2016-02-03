@@ -34,6 +34,8 @@ router.get('/:stock', function(req, res, next) {
     var rawData = body.dataset.data;
     var dates = [];
     var prices = [];
+    var chartData = {};
+    chartData.datasets = [];
     rawData.forEach(function(item) {
       dates.push(item[0]);
       prices.push(item[1]);
@@ -51,7 +53,20 @@ router.get('/:stock', function(req, res, next) {
       });
       Stock.findStocks(function(err, docs) {
         if (err) throw err;
-        res.send(docs);
+        chartData.labels = dates;
+        docs.forEach(function(item) {
+          chartData.datasets.push(
+            {
+              fillColor: 'rgba(151,187,205,0.5)',
+              strokeColor: 'rgba(151,187,205,1)',
+              pointColor: 'rgba(151,187,205,1)',
+              pointStrokeColor: '#fff',
+              data: item.prices
+            }
+          );
+        });
+        console.log(chartData);
+        res.send(chartData);
       });
     }
   });
