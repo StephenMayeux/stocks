@@ -10,7 +10,7 @@ var quandl = new Quandl({
   api_version: 3
 });
 
-router.get('/:stock', function(req, res) {
+router.get('/:stock', function(req, res, next) {
 
   function getStocks(callback) {
     quandl.dataset({
@@ -53,7 +53,7 @@ router.get('/:stock', function(req, res) {
       });
       Stock.findStocks(function(err, docs) {
         if (err) throw err;
-        chartData.labels = dates;
+        chartData.labels = docs[0].dates;
         docs.forEach(function(item) {
           chartData.datasets.push(
             {
@@ -69,6 +69,28 @@ router.get('/:stock', function(req, res) {
         res.send(chartData);
       });
     }
+  });
+});
+
+router.get('/init/chart', function(req, res, next) {
+  var chartData = {};
+  chartData.datasets = [];
+  Stock.findStocks(function(err, docs) {
+    if (err) throw err;
+    chartData.labels = docs[0].dates;
+    docs.forEach(function(item) {
+      chartData.datasets.push(
+        {
+          label: item.name,
+          fillColor: 'rgba(151,187,205,0.5)',
+          strokeColor: 'rgba(151,187,205,1)',
+          pointColor: 'rgba(151,187,205,1)',
+          pointStrokeColor: '#fff',
+          data: item.prices
+        }
+      );
+    });
+    res.send(chartData);
   });
 });
 

@@ -29,6 +29,19 @@ app.factory('socket', function ($rootScope) {
 //Main Controller for our app
 function MainController($scope, $http, socket) {
 
+  // When the page intially loads
+  $http.get('/api/init/chart')
+    .success(function(data) {
+      //$scope.fetched = data.data;
+      $scope.chartData = data;
+      socket.emit('updated quotes');
+      socket.emit('updated charts', {data: $scope.chartData});
+      $scope.createChart($scope.chartData);
+    })
+    .error(function(err) {
+      console.log('There was an error because of: ' + err);
+    });
+
   // Create empty object to store ChartsJS data
   $scope.chartData = {};
 
