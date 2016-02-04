@@ -51,7 +51,7 @@ function MainController($scope, $http, socket) {
 
   // takes chartsjs data and creates the chart
   $scope.createChart = function(data){
-    $scope.myChart = {"data": data, "options": {reponsive: true, scaleShowLabels: false, showTooltips: false, pointDot: false} };
+    $scope.myChart = {"data": data, "options": {multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>"}};
   };
 
   // Show stock symbols to all connected users
