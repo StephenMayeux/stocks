@@ -8,8 +8,10 @@ block content
       input.form-control(type="text", id="search", placeholder="Search for stock symbols", ng-model="formData.text")
       span.input-group-btn
         button.btn.btn-primary(type="button", id="get-quote", style="margin-bottom: 10px;", ng-click="searchStocks(formData.text)") Click for Quotes!
-    div(ng-repeat="fetch in fetched")
-      p {{fetch.name}}
-      button.close(type="button", aria-label="Close", ng-click="deleteStock(fetch.name)")
-        span(aria-hidden="true") &#215;
+    div.row
+      div(ng-repeat="fetch in fetched")
+        div.col-xs-2
+          button.close(type="button", aria-label="Close", ng-click="deleteStock(fetch.name)")
+            span(aria-hidden="true") &#215;
+          p {{fetch.name}}
     chart(value="myChart", id="myCoolChart")
