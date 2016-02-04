@@ -1,3 +1,4 @@
+// REQUIRED MODULES ============================================================
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -11,8 +12,10 @@ var api = require('./routes/api');
 var mongoose = require('mongoose');
 var Stock = require('./models/stock');
 
+// SET UP MONGODB ==============================================================
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/stocks');
 
+// SET UP MIDDLEWARE ===========================================================
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -28,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/api', api);
 
+// ERROR HANDLERS ==============================================================
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -59,6 +63,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// SOCKET.IO EVENT EMITTERS ====================================================
 app.io.on('connection', function(socket){
 
   console.log('a user connected');
@@ -76,7 +81,6 @@ app.io.on('connection', function(socket){
   });
 
   socket.on('updated charts', function(data) {
-    console.log(data);
     app.io.sockets.emit('show charts', {data: data.data});
   });
 

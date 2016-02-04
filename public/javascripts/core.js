@@ -29,10 +29,12 @@ app.factory('socket', function ($rootScope) {
 //Main Controller for our app
 function MainController($scope, $http, socket) {
 
-  // When the page intially loads
+  // Create empty object to store ChartsJS data
+  $scope.chartData = {};
+
+  // When the page intially loads, get charts data
   $http.get('/api/init/chart')
     .success(function(data) {
-      //$scope.fetched = data.data;
       $scope.chartData = data;
       socket.emit('updated quotes');
       socket.emit('updated charts', {data: $scope.chartData});
@@ -42,26 +44,25 @@ function MainController($scope, $http, socket) {
       console.log('There was an error because of: ' + err);
     });
 
-  // Create empty object to store ChartsJS data
-  $scope.chartData = {};
-
+  // show charts to all connected users
   socket.on('show charts', function(data) {
     $scope.createChart(data.data);
   });
 
+  // takes chartsjs data and creates the chart
   $scope.createChart = function(data){
-    console.log($scope.chartData);
     $scope.myChart = {"data": data, "options": {reponsive: true, scaleShowLabels: false, showTooltips: false, pointDot: false} };
   };
 
+  // Show stock symbols to all connected users
   socket.on('show stocks', function(data) {
     $scope.fetched = data.data;
   });
 
+  // click event for adding new stock symbol
   $scope.searchStocks = function(stock) {
     $http.get('/api/' + stock)
       .success(function(data) {
-        //$scope.fetched = data.data;
         $scope.chartData = data;
         socket.emit('updated quotes');
         socket.emit('updated charts', {data: $scope.chartData});
