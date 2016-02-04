@@ -12,6 +12,6 @@ module.exports.saveStock = function(newStock, callback) {
   newStock.save(callback);
 };
 
-module.exports.findStocks = function(query, projection, callback) {
-  Stock.find(query, projection, callback);
+module.exports.findStocks = function(query, callback) {
+  Stock.find(query, callback);
 };

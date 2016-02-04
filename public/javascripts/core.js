@@ -73,4 +73,18 @@ function MainController($scope, $http, socket) {
       });
   };
 
+  // click event for deleting stock symbol
+  $scope.deleteStock = function(stock) {
+    $http.get('/api/delete/' + stock)
+      .success(function(data) {
+        $scope.chartData = data;
+        socket.emit('updated quotes');
+        socket.emit('updated charts', {data: $scope.chartData});
+        $scope.createChart($scope.chartData);
+      })
+      .error(function(err) {
+        console.log('There was an error because of: ' + err);
+      });
+  };
+
 }
